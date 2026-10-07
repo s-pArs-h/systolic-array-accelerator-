@@ -1,0 +1,12 @@
+{
+    "DESIGN_NAME": "systolic_array",
+    "VERILOG_FILES": ["dir::src/sa_pe.sv", "dir::src/sa_skew.sv", "dir::src/systolic_array.sv"],
+    "CLOCK_PORT": "clk",
+    "CLOCK_PERIOD": 10.0,
+    "FP_SIZING": "relative",
+    "FP_CORE_UTIL": 35,
+    "PL_TARGET_DENSITY": 0.45,
+    "VDD_NETS": ["vccd1"],
+    "GND_NETS": ["vssd1"],
+    "DESIGN_IS_CORE": true
+}
