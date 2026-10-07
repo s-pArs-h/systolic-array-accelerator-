@@ -17,7 +17,7 @@
 // Tiles stream back to back: the next tile's slices enter while the
 // previous tile is still being drained. Only a tile's LAST slice can be held
 // back (s_ready low), when its results would otherwise be captured while
-// the drain chains are still busy. With K >= 3N and an always-ready
+// the drain chains are still busy. With K >= 3N + 1 and an always-ready
 // output, the array never stalls: N*N multiply-accumulates every cycle.
 module systolic_array #(
     parameter N    = 4,
@@ -43,7 +43,7 @@ module systolic_array #(
     // ------------------------------------------------------------------
     // Control
     // ------------------------------------------------------------------
-    localparam CAP_LAT = 2*N - 2;          // cycles from accepting a last slice to the
+    localparam CAP_LAT = 2*N - 1;          // cycles from accepting a last slice to the
                                            // cycle before PE(N-1, N-1) captures it
     localparam CW = $clog2(CAP_LAT + 1) + 1;
     localparam RW = $clog2(N + 1);
