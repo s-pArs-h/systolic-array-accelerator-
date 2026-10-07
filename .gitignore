@@ -1,0 +1,8 @@
+tb/sim_build_*/
+tb/results.xml
+tb/__pycache__/
+tb/coverage_N*.txt
+formal/sa_*/
+synth/reports/
+*.vcd
+*.fst
