@@ -1,0 +1,47 @@
+# SymbiYosys flow for systolic_array. Needs yosys, sby and yices.
+#   sby -f sa.sby          every task
+#
+#   prove     k-induction, unbounded, N=4, INT8: the capture/drain exclusion
+#             in every PE, the controller invariants, and output stability
+#   bmc_n2    bounded (16 cycles): all properties incl. first-tile data
+#             integrity, N=2, 2-bit operands, first tile up to 3 slices
+#   bmc_n3    as bmc_n2 with N=3
+# The data check runs at 2-bit operands because proving multipliers equal
+# is very hard for SAT solvers; full-width arithmetic is covered by the
+# simulation tests.
+#   cover     a held last slice, a stalled output, two complete tiles
+
+[tasks]
+prove
+bmc_n2
+bmc_n3
+cover
+
+[options]
+prove:  mode prove
+prove:  depth 14
+bmc_n2: mode bmc
+bmc_n2: depth 16
+bmc_n3: mode bmc
+bmc_n3: depth 16
+cover:  mode cover
+cover:  depth 24
+
+[engines]
+smtbmc yices
+
+[script]
+read -formal sa_pe.sv sa_skew.sv systolic_array.sv sa_formal.sv
+prove:  chparam -set N 4 -set DW 8 -set ACCW 32 -set SCOREBOARD 0 -set CHECK_DATA 0 sa_formal
+bmc_n2: chparam -set N 2 -set DW 2 -set ACCW 8 sa_formal
+bmc_n3: chparam -set N 3 -set DW 2 -set ACCW 10 sa_formal
+cover:  chparam -set N 2 -set DW 2 -set ACCW 8 sa_formal
+prep -flatten -top sa_formal
+memory_map
+opt -fast
+
+[files]
+../rtl/sa_pe.sv
+../rtl/sa_skew.sv
+../rtl/systolic_array.sv
+sa_formal.sv
