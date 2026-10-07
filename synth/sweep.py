@@ -37,7 +37,7 @@ def main():
     for n in sizes:
         c = synth(n)
         lines.append(f"| {n} | {n*n} | {c['LUT']} | {c['FF']} | {c['DSP48E1']} | {c['CARRY4']} "
-                     f"| {n*n} | {c['LUT'] / (n*n):.0f} | >= {3*n} |")
+                     f"| {n*n} | {c['LUT'] / (n*n):.0f} | >= {3*n + 1} |")
     table = "\n".join(lines)
     (REPORTS / "sweep.md").write_text(table + "\n")
     print(table)

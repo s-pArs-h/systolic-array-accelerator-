@@ -22,7 +22,7 @@ import model
 N = int(os.environ.get("SA_N", "4"))
 DW, ACCW = 8, 32
 SEED = int(os.environ.get("SEED", "1"))
-FULL_RATE_K = 3 * N              # smallest K that never stalls (see docs/DESIGN.md)
+FULL_RATE_K = 3 * N + 1          # smallest K that never stalls (see docs/DESIGN.md)
 
 for name in ("k_equals_1", "small_k_last_slice_stalled", "input_gap", "output_stall",
              "operand_minus128", "operand_127", "acc_beyond_2pow24", "negative_result",
@@ -186,7 +186,7 @@ async def test_extreme_accumulation(dut):
 
 @cocotb.test()
 async def test_small_k_back_to_back(dut):
-    """K = 1 .. 3N-1: the last slice has to wait for the previous drain."""
+    """K = 1 .. 3N: the last slice has to wait for the previous drain."""
     rng, pyrng = np.random.default_rng(SEED + 3), random.Random(SEED + 3)
     await reset(dut)
     tiles = []
@@ -198,7 +198,7 @@ async def test_small_k_back_to_back(dut):
 
 @cocotb.test()
 async def test_full_rate(dut):
-    """With K >= 3N and no back-pressure, slices are accepted every cycle:
+    """With K >= 3N+1 and no back-pressure, slices are accepted every cycle:
     N*N multiply-accumulates per cycle."""
     rng, pyrng = np.random.default_rng(SEED + 4), random.Random(SEED + 4)
     await reset(dut)
