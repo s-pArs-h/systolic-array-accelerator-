@@ -101,7 +101,7 @@ throughput grows with it. At N = 16 the array needs 256 DSP48E1 slices, more
 than an Artix-7 100T has (240), so N = 8 is the largest power-of-two size
 for the Nexys A7.
 
-### PPA iteration: accumulator into the DSP
+### PPA iteration: accumulator into the DSP (Yosys)
 
 The first version captured each PE's result straight from the adder output.
 Because the adder output was then needed outside the multiply-accumulate,
@@ -113,8 +113,28 @@ Capturing from the accumulator register one cycle later instead:
 | capture from adder | 16,923 | 22,702 | 256 | |
 | capture from accumulator | **8,731** (-48%) | **14,526** (-36%) | 256 | +1 cycle latency; stall-free K from 3N to 3N+1 |
 
-Vivado timing (Fmax) and an OpenLane Sky130 run (`openlane/config.json`)
-are next.
+### Vivado
+
+Vivado 2025.1, xc7a100tcsg324-1, N = 8, out of context (the array alone,
+no pins) with a 4 ns clock target; maximum frequency estimated as
+1 / (period - worst slack):
+
+| N = 8 | Vivado default | `use_dsp` on the PE |
+|---|---|---|
+| LUTs | 7,436 | **1,175** (-84%) |
+| Flip-flops | 5,753 | 3,455 |
+| DSP48E1 | 0 | 128 |
+| Fmax (estimate) | 128 MHz | 143 MHz |
+
+By default Vivado builds an 8 x 8 multiplier from LUTs because it is small,
+and the accumulator then stays in fabric too. The `use_dsp` attribute on
+`sa_pe` moves the multiply-accumulate into DSP slices. Vivado still uses
+two DSPs per PE (multiplier and accumulator separately), so the next step
+is a PE written to Xilinx's multiply-accumulate template, with registered
+inputs and product, to fit one DSP per PE and raise the clock, at the cost
+of two more cycles of latency.
+
+An OpenLane Sky130 run (`openlane/config.json`) is next.
 
 ## Running it
 

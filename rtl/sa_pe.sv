@@ -23,6 +23,11 @@
 // it takes the value of the PE below, so finished rows move up and leave the
 // array at row 0. The controller guarantees a capture and a drain never
 // happen in the same PE in the same cycle.
+//
+// Vivado builds an 8 x 8 multiplier from LUTs by default (it is small), which
+// also pulls the adder and accumulator out of the DSP slice. USE_DSP asks for
+// the whole multiply-accumulate in one DSP48E1; other tools ignore it.
+(* use_dsp = "yes" *)
 module sa_pe #(
     parameter DW   = 8,                  // signed operand width
     parameter ACCW = 32                  // accumulator width
