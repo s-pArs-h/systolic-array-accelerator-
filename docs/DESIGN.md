@@ -117,17 +117,3 @@ solvers, so the end-to-end data check uses 2-bit operands; full-width
 arithmetic is covered by simulation, including the extremes. The
 reference model in the formal harness computes products at their exact
 width: a 32-bit multiply there made the solver stall even at tiny sizes.
-
-## 9. Questions to be ready for
-
-* Why output-stationary rather than weight-stationary? When would WS win?
-* Why do A and B need skewing, and why doesn't a bubble break the alignment?
-* Walk through one tile: when does PE(2, 3) see slice k? When does it capture?
-* Why can only the last slice ever stall? Derive the K >= 3N + 1 condition.
-* What would go wrong if a capture and a drain shift hit the same PE?
-  How is that proven impossible?
-* Why did capturing one cycle later halve the LUTs?
-* How big can K be before INT32 overflows?
-* How would you feed this from memory (DMA, double-buffered SRAM tiles), and
-  what limits throughput then: compute or bandwidth?
-* What limits Fmax here, and how would you pipeline further?
