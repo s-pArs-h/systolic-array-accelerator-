@@ -101,7 +101,7 @@ throughput grows with it. At N = 16 the array needs 256 DSP48E1 slices, more
 than an Artix-7 100T has (240), so N = 8 is the largest power-of-two size
 for the Nexys A7.
 
-### PPA iteration: accumulator into the DSP
+### PPA iteration: accumulator into the DSP (Yosys)
 
 The first version captured each PE's result straight from the adder output.
 Because the adder output was then needed outside the multiply-accumulate,
